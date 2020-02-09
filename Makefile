@@ -8,10 +8,10 @@ go:
 	gofmt -s -w .
 
 run:
-	go run cmd/main.go
+	go run main.go
 
 build:
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go build cmd/api/main.go
+	GOOS=$(GOOS) GOARCH=$(GOARCH) go build main.go
 
 test:
 	go test -v ./...

@@ -1,0 +1,16 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /goapp
+    destination: /opt
+
+hooks:
+  ApplicationStop:
+    - location: hooks/application_stop.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: hooks/application_start.sh
+      timeout: 300
+      runas: root
