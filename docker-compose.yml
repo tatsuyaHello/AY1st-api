@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:5.7.29
+    container_name: ay1st_mysql_local
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      TZ: Asia/Tokyo
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql:/var/lib/mysql
+      - ./fixtures:/var/fixtures/
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD:
+    ports:
+      - 9980:80
+    depends_on:
+      - mysql
+
+volumes:
+  mysql:

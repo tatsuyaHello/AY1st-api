@@ -22,3 +22,9 @@ dev-deps:
 
 refresh-run:
 	realize start
+
+docker-up:
+	@if [ ! $(docker-compose ps | grep mysql) ] ; then docker-compose up -d ; fi
+
+init-db-local: docker-up
+	DATABASE_NAME=ay1st-local sh ./fixtures/init_db_local.sh
