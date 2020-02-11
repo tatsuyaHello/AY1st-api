@@ -1,25 +1,31 @@
 package main
 
 import (
-	"log"
-
-	"AY1st/handler"
-
-	"github.com/gin-gonic/gin"
+	"AY1st/server"
+	"AY1st/util"
+	"os"
 )
 
 func main() {
 
-	router := gin.Default()
+	util.LoadEnv()
+	util.InitLogger()
+	err := server.Start()
+	if err != nil {
+		util.GetLogger().Errorln(err)
+		os.Exit(1)
+	}
 
-	// ルーティングの登録を以下で行う
-	router.GET("ping/json", handler.PingJSON)
+	// router := gin.Default()
 
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal("error loading .env file")
-	// }
+	// // ルーティングの登録を以下で行う
+	// router.GET("ping/json", handler.PingJSON)
 
-	// log.Fatal(router.Run(":" + os.Getenv("SERVER_PORT")))
-	log.Fatal(router.Run(":" + "8080"))
+	// // err := godotenv.Load()
+	// // if err != nil {
+	// // 	log.Fatal("error loading .env file")
+	// // }
+
+	// // log.Fatal(router.Run(":" + os.Getenv("SERVER_PORT")))
+	// log.Fatal(router.Run(":" + "8080"))
 }
