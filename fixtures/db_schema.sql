@@ -7,7 +7,7 @@ CREATE TABLE `users` (
 `avartar_url` TEXT NOT NULL COMMENT 'プロフィール画像',
 `about` TEXT DEFAULT NULL COMMENT '自由記述欄',
 `recommendation_book` TEXT NULL COMMENT '推薦本URL',
-`is_terms_of_service` INT (1) DEFAULT '0' COMMENT 'ユーザが利用規約に同意したか否かを表示',
+`is_terms_of_service` TINYINT (1) DEFAULT '0' COMMENT 'ユーザが利用規約に同意したか否かを表示',
 `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日',
 `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日',
 PRIMARY KEY (`id`),
@@ -51,4 +51,14 @@ CREATE TABLE `actions` (
 `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日',
 PRIMARY KEY (`id`),
 CONSTRAINT fk_user_book_registration_id FOREIGN KEY (user_book_registration_id) REFERENCES users_books_registrations (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- user_identitiesテーブルを追加
+CREATE TABLE `user_identities` (
+`id` BIGINT (10) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+`sub` VARCHAR (255) NOT NULL COMMENT 'Cognitoからの値',
+`user_id` BIGINT (10),
+`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日',
+`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日',
+PRIMARY KEY (`id`),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
