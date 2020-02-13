@@ -54,6 +54,7 @@ func (r *Repository) NewHealthCheck() repository.HealthCheckInterface {
 type Servicer interface {
 	NewHealthCheck() service.HealthCheckInterface
 	NewUsers() service.UsersInterface
+	NewBooks() service.BooksInterface
 }
 
 // ServiceRegistrySettings はサービスレジストリの設定
@@ -90,4 +91,12 @@ func (r *ServiceRegistry) NewUsers() service.UsersInterface {
 	UsersRepo := repository.NewUsers(r.settings.Engine)
 	UserIdentitiesRepo := repository.NewUserIdentities(r.settings.Engine)
 	return service.NewUsers(UsersRepo, UserIdentitiesRepo)
+}
+
+// NewBooks returns Books service.
+func (r *ServiceRegistry) NewBooks() service.BooksInterface {
+	BooksRepo := repository.NewBooks(r.settings.Engine)
+	UsersBooksRegistrationsRepo := repository.NewUsersBooksRegistrations(r.settings.Engine)
+	ActionsRepo := repository.NewActions(r.settings.Engine)
+	return service.NewBooks(BooksRepo, UsersBooksRegistrationsRepo, ActionsRepo)
 }

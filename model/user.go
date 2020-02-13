@@ -8,7 +8,7 @@ type User struct {
 	AvartarURL         string `json:"avartar_url"`
 	About              string `json:"about"`
 	RecommendationBook string `json:"recommendation_book"`
-	IsTermsOfService   int    `json:"is_terms_of_service"`
+	IsTermsOfService   uint64 `json:"is_terms_of_service"`
 }
 
 //UserCreateInput はユーザ作成のモデル
@@ -22,7 +22,7 @@ type UserUpdateInput struct {
 	DisplayName        string `json:"display_name" binding:"required"`
 	About              string `json:"about"`
 	RecommendationBook string `json:"recommendation_book"`
-	IsTermsOfService   int    `json:"is_terms_of_service"`
+	IsTermsOfService   uint64 `json:"is_terms_of_service"`
 }
 
 // TableName represents db table name

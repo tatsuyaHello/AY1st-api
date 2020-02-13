@@ -32,6 +32,8 @@ const (
 	ErrorInternalServerError ErrorCode = "InternalServerError"
 	// ErrorUnderMaintenance メンテナンス中
 	ErrorUnderMaintenance ErrorCode = "UnderMaintenance"
+	// ErrorCannotCreate 作成に失敗
+	ErrorCannotCreate ErrorCode = "CannotCreate"
 )
 
 // WrappedError は外向きのエラー
