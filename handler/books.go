@@ -22,8 +22,8 @@ func PostBooks(c *gin.Context) {
 		return
 	}
 
-	// created, err := booksService.Create(user.ID, &input)
-	created, err := booksService.Create(1, &input)
+	created, err := booksService.Create(user.ID, &input)
+	// created, err := booksService.Create(1, &input)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, NewErrorResponse("400", ErrorUnknown, err.Error()))
 		return
