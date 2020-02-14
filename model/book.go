@@ -18,7 +18,7 @@ type BookBody struct {
 // BookActionInput is book and action information
 type BookActionInput struct {
 	BookBody        `xorm:"extends"`
-	ActionInputBody []ActionInputBody `xorm:"extends"`
+	ActionInputBody []ActionInputBody `xorm:"extends" json:"action_input_body"`
 }
 
 // TableName represents db table name

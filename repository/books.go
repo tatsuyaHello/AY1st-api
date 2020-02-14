@@ -77,7 +77,7 @@ func (b *Books) GetByRakutenID(id string) (*model.Book, error) {
 		return nil, fmt.Errorf("can not get book")
 	}
 	if !ok {
-		return nil, fmt.Errorf("can not get book")
+		return nil, nil
 	}
 	return book, nil
 }

@@ -43,6 +43,9 @@ func (b *Books) Create(userID uint64, input *model.BookActionInput) (*model.Book
 			return nil, model.NewError(model.ErrorResourceNotFound, "book not found")
 		}
 	}
+	if bo != nil {
+		book = bo
+	}
 
 	//2. booksテーブルとusersテーブルの結びつけをusers_books_registrationsに保存する。
 	ubr, err := b.UsersBooksRegistrationsRepo.Create(userID, book.ID)

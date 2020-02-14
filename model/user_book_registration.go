@@ -12,3 +12,8 @@ type UserBookRegistrationBody struct {
 	BookID            uint64 `json:"book_id"`
 	IsActionCompleted uint64 `json:"is_action_completed"`
 }
+
+// TableName represents db table name
+func (UserBookRegistration) TableName() string {
+	return "users_books_registrations"
+}
