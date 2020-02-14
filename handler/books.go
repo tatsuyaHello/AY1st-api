@@ -11,7 +11,7 @@ import (
 
 // PostBooks は投稿の新規登録
 func PostBooks(c *gin.Context) {
-	// user := c.MustGet("user").(*model.User)
+	user := c.MustGet("user").(*model.User)
 
 	servicer := c.MustGet(registry.ServiceKey).(registry.Servicer)
 	booksService := servicer.NewBooks()
