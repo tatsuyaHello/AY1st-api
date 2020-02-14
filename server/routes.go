@@ -46,4 +46,9 @@ func defineRoutes(r gin.IRouter, authenticator Authenticator, userService servic
 		withUser.DELETE("/users/:user-id", RequirePathParam("user-id"), handler.DeleteUser)
 	}
 
+	// Book
+	{
+		base.POST("/books", handler.PostBooks)
+	}
+
 }
