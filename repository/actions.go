@@ -13,6 +13,7 @@ import (
 type ActionsInterface interface {
 	Create(ubrID uint64, content string) (*model.Action, error)
 	Get(id uint64) ([]*model.ActionBody, error)
+	Update(input *model.Action) (*model.Action, error)
 }
 
 // Actions is health check (debug)
@@ -75,4 +76,20 @@ func (a *Actions) Get(id uint64) ([]*model.ActionBody, error) {
 		return nil, fmt.Errorf("can not get actions")
 	}
 	return actions, nil
+}
+
+// Update は投稿の更新
+func (a *Actions) Update(input *model.Action) (*model.Action, error) {
+
+	action := &model.Action{}
+
+	action.ActionBody = input.ActionBody
+	action.ID = input.ID
+	now := util.GetTimeNow()
+	action.Common.UpdatedAt = &now
+	_, err := a.engine.ID(action.ID).Update(action)
+	if err != nil {
+		return nil, err
+	}
+	return action, nil
 }
