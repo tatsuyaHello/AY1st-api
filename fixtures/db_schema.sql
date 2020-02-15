@@ -5,6 +5,7 @@ CREATE TABLE `users` (
 `display_name` VARCHAR (255) NOT NULL COMMENT '表示名',
 `avartar_url` TEXT NOT NULL COMMENT 'プロフィール画像',
 `about` TEXT DEFAULT NULL COMMENT '自由記述欄',
+`total_price` BIGINT DEFAULT 0 COMMENT '読んだ本の合計金額',
 `recommendation_book` TEXT NULL COMMENT '推薦本URL',
 `is_terms_of_service` TINYINT (1) DEFAULT '0' COMMENT 'ユーザが利用規約に同意したか否かを表示',
 `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日',
@@ -68,9 +69,9 @@ INSERT INTO `books` (`id`, `rakuten_id`, `title`, `price`, `author`, `book_img_u
 VALUES
 (1, '12345', '超集中力', 1000, 'hoge', 'hogehoge@@hogehoge.com');
 
-INSERT INTO `users` (`id`, `email`, `display_name`, `avartar_url`, `about`, `recommendation_book`, `is_terms_of_service`)
+INSERT INTO `users` (`id`, `email`, `display_name`, `avartar_url`, `about`, `total_price`, `recommendation_book`, `is_terms_of_service`)
 VALUES
-(1, 'yata62885@gmail.com', 'tatsuya', 'avartar_url.img', '僕はyamamura', 'hogehoge@@hogehoge.com', 1);
+(1, 'yata62885@gmail.com', 'tatsuya', 'avartar_url.img', '僕はyamamura', 0, 'hogehoge@@hogehoge.com', 1);
 
 INSERT INTO `user_identities` (`id`, `sub`, `user_id`)
 VALUES
@@ -82,4 +83,6 @@ VALUES
 
 INSERT INTO `actions` (`id`, `is_finished`, `user_book_registration_id`, `content`)
 VALUES
-(1, 0, 1, '早起きする');
+(1, 0, 1, '早起きする'),
+(2, 0, 1, 'ご飯食べる'),
+(3, 0, 1, 'ランニングする');
