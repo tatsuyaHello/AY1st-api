@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 
+	"AY1st/infra"
 	"AY1st/model"
 	"AY1st/util"
 
@@ -124,8 +125,8 @@ func (u *Users) Delete(id uint64, sub string) error {
 	defer session.Close()
 	err := session.Begin()
 
-	userIdentity := &model.UserIdentity{}
-	affected, err := u.engine.ID(id).Delete(userIdentity)
+	user := &model.User{}
+	affected, err := u.engine.ID(id).Delete(user)
 	if err != nil {
 		session.Rollback()
 		return err
@@ -136,20 +137,18 @@ func (u *Users) Delete(id uint64, sub string) error {
 	}
 
 	//NOTE フロントと調整
-	/*
-		// AWS cognito上のデータを削除
-		cognitoUserName, err := infra.GetCognitoUserName(sub)
-		if err != nil {
-			session.Rollback()
-			return err
-		}
+	// AWS cognito上のデータを削除
+	cognitoUserName, err := infra.GetCognitoUserName(sub)
+	if err != nil {
+		session.Rollback()
+		return err
+	}
 
-		_, err = infra.DeleteCognitoUser(cognitoUserName)
-		if err != nil {
-			session.Rollback()
-			return err
-		}
-	*/
+	_, err = infra.DeleteCognitoUser(cognitoUserName)
+	if err != nil {
+		session.Rollback()
+		return err
+	}
 
 	err = session.Commit()
 	if err != nil {
