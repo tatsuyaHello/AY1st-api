@@ -12,6 +12,7 @@ import (
 // ActionsInterface is health check (debug)
 type ActionsInterface interface {
 	Create(ubrID uint64, content string) (*model.Action, error)
+	Get(id uint64) ([]*model.ActionBody, error)
 }
 
 // Actions is health check (debug)
@@ -61,4 +62,17 @@ func (a *Actions) Create(ubrID uint64, content string) (*model.Action, error) {
 	}
 
 	return action, nil
+}
+
+// Get はアクションを取得
+func (a *Actions) Get(id uint64) ([]*model.ActionBody, error) {
+	actions := []*model.ActionBody{}
+	// actions := new(model.ActionBody)
+	// actions := make([]*model.ActionBody, 0)
+	err := a.engine.ID(id).Find(&actions)
+	if err != nil {
+		util.GetLogger().Error(err)
+		return nil, fmt.Errorf("can not get actions")
+	}
+	return actions, nil
 }

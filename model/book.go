@@ -15,12 +15,6 @@ type BookBody struct {
 	BookImgURL string `json:"book_img_url"`
 }
 
-// BookActionInput is book and action information
-type BookActionInput struct {
-	BookBody        `xorm:"extends"`
-	ActionInputBody []ActionInputBody `xorm:"extends" json:"action_input_body"`
-}
-
 // TableName represents db table name
 func (Book) TableName() string {
 	return "books"

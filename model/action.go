@@ -22,3 +22,8 @@ type ActionInputBody struct {
 func (Action) TableName() string {
 	return "actions"
 }
+
+// TableName represents db table name
+func (ActionBody) TableName() string {
+	return "actions"
+}

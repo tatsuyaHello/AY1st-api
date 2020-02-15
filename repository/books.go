@@ -13,6 +13,7 @@ import (
 type BooksInterface interface {
 	Create(input *model.BookBody) (*model.Book, error)
 	GetByRakutenID(rakutenID string) (*model.Book, error)
+	GetOne(id uint64) (*model.Book, error)
 }
 
 // Books is health check (debug)
@@ -78,6 +79,20 @@ func (b *Books) GetByRakutenID(id string) (*model.Book, error) {
 	}
 	if !ok {
 		return nil, nil
+	}
+	return book, nil
+}
+
+// GetOne は一意な本を取得
+func (b *Books) GetOne(id uint64) (*model.Book, error) {
+	book := &model.Book{}
+	ok, err := b.engine.ID(id).Get(book)
+	if err != nil {
+		util.GetLogger().Error(err)
+		return nil, fmt.Errorf("can not get book")
+	}
+	if !ok {
+		return nil, fmt.Errorf("can not get book")
 	}
 	return book, nil
 }

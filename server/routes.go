@@ -43,12 +43,14 @@ func defineRoutes(r gin.IRouter, authenticator Authenticator, userService servic
 		withUser.GET("me", handler.GetMe)
 		withUser.GET("/users/:user-id", RequirePathParam("user-id"), handler.GetUser)
 		withUser.PUT("/users/:user-id", RequirePathParam("user-id"), handler.PutUser)
-		public.DELETE("/users/:user-id", RequirePathParam("user-id"), handler.DeleteUser)
+		withUser.DELETE("/users/:user-id", RequirePathParam("user-id"), handler.DeleteUser)
+
 	}
 
-	// Book
+	// Post ユーザの投稿
 	{
-		base.POST("/books", handler.PostBooks)
+		public.GET("/posts/:post-id", RequirePathParam("post-id"), handler.GetPost)
+		withUser.POST("/posts", handler.PostPost)
 	}
 
 }
