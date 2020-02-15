@@ -107,17 +107,17 @@ func PutUser(c *gin.Context) {
 // DeleteUser はユーザー情報削除
 func DeleteUser(c *gin.Context) {
 
-	// user := c.MustGet("user").(*model.User)
+	user := c.MustGet("user").(*model.User)
 	userID := c.MustGet("user-id").(uint64)
 
 	servicer := c.MustGet(registry.ServiceKey).(registry.Servicer)
 	usersService := servicer.NewUsers()
 
 	// ユーザーの整合性を確認
-	// if user.ID != userID {
-	// 	c.AbortWithStatusJSON(http.StatusBadRequest, NewErrorResponse("400", ErrorParam, "user-id is not your own id"))
-	// 	return
-	// }
+	if user.ID != userID {
+		c.AbortWithStatusJSON(http.StatusBadRequest, NewErrorResponse("400", ErrorParam, "user-id is not your own id"))
+		return
+	}
 
 	err := usersService.Delete(userID)
 	if err != nil {
