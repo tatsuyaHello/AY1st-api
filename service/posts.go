@@ -11,6 +11,7 @@ type PostsInterface interface {
 	GetOne(id uint64) (*model.Post, error)
 	GetAll() ([]*model.Posts, error)
 	Delete(id uint64) error
+	Update(input []*model.Action) ([]*model.Action, error)
 }
 
 // Posts is
@@ -132,4 +133,17 @@ func (p *Posts) Delete(id uint64) error {
 	}
 
 	return nil
+}
+
+// Update は投稿を更新
+func (p *Posts) Update(input []*model.Action) ([]*model.Action, error) {
+
+	for _, v := range input {
+		_, err := p.ActionsRepo.Update(v)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return input, nil
 }

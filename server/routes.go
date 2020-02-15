@@ -52,6 +52,7 @@ func defineRoutes(r gin.IRouter, authenticator Authenticator, userService servic
 		withUser.POST("/posts", handler.PostPost)
 		public.GET("/posts", handler.GetPostAll)
 		public.GET("/posts/:post-id", RequirePathParam("post-id"), handler.GetPost)
+		withUser.PUT("/posts/:post-id", RequirePathParam("post-id"), handler.PutPost)
 		withUser.DELETE("/posts/:post-id", RequirePathParam("post-id"), handler.DeletePost)
 	}
 
