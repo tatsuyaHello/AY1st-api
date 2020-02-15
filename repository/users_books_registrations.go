@@ -11,6 +11,7 @@ import (
 // UsersBooksRegistrationsInterface is
 type UsersBooksRegistrationsInterface interface {
 	Create(userID, bookID uint64) (*model.UserBookRegistration, error)
+	GetOne(id uint64) (*model.UserBookRegistration, error)
 }
 
 // UsersBooksRegistrations is health check (debug)
@@ -70,4 +71,18 @@ func (ubr *UsersBooksRegistrations) Create(userID, bookID uint64) (*model.UserBo
 	}
 
 	return res, nil
+}
+
+// GetOne は一意な投稿の結びつきを取得
+func (ubr *UsersBooksRegistrations) GetOne(id uint64) (*model.UserBookRegistration, error) {
+	ubrs := &model.UserBookRegistration{}
+	ok, err := ubr.engine.ID(id).Get(ubrs)
+	if err != nil {
+		util.GetLogger().Error(err)
+		return nil, fmt.Errorf("can not get ubr")
+	}
+	if !ok {
+		return nil, fmt.Errorf("can not get ubr")
+	}
+	return ubrs, nil
 }

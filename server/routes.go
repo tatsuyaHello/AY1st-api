@@ -49,7 +49,8 @@ func defineRoutes(r gin.IRouter, authenticator Authenticator, userService servic
 
 	// Post ユーザの投稿
 	{
-		public.POST("/posts", handler.PostPosts)
+		public.GET("/posts/:post-id", RequirePathParam("post-id"), handler.GetPost)
+		withUser.POST("/posts", handler.PostPost)
 	}
 
 }

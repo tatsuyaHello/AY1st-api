@@ -95,8 +95,9 @@ func (r *ServiceRegistry) NewUsers() service.UsersInterface {
 
 // NewPosts returns Posts service.
 func (r *ServiceRegistry) NewPosts() service.PostsInterface {
+	UsersRepo := repository.NewUsers(r.settings.Engine)
 	BooksRepo := repository.NewBooks(r.settings.Engine)
 	UsersBooksRegistrationsRepo := repository.NewUsersBooksRegistrations(r.settings.Engine)
 	ActionsRepo := repository.NewActions(r.settings.Engine)
-	return service.NewPosts(BooksRepo, UsersBooksRegistrationsRepo, ActionsRepo)
+	return service.NewPosts(UsersRepo, BooksRepo, UsersBooksRegistrationsRepo, ActionsRepo)
 }

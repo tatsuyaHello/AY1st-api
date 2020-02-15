@@ -8,18 +8,21 @@ import (
 // PostsInterface is
 type PostsInterface interface {
 	Create(userID uint64, bookAction *model.PostInput) (*model.PostInput, error)
+	GetOne(id uint64) (*model.Post, error)
 }
 
 // Posts is
 type Posts struct {
+	UsersRepo                   repository.UsersInterface
 	BooksRepo                   repository.BooksInterface
 	ActionsRepo                 repository.ActionsInterface
 	UsersBooksRegistrationsRepo repository.UsersBooksRegistrationsInterface
 }
 
 // NewPosts is
-func NewPosts(BooksRepo repository.BooksInterface, UsersBooksRegistrationsRepo repository.UsersBooksRegistrationsInterface, ActionsRepo repository.ActionsInterface) *Posts {
+func NewPosts(UsersRepo repository.UsersInterface, BooksRepo repository.BooksInterface, UsersBooksRegistrationsRepo repository.UsersBooksRegistrationsInterface, ActionsRepo repository.ActionsInterface) *Posts {
 	b := Posts{
+		UsersRepo:                   UsersRepo,
 		BooksRepo:                   BooksRepo,
 		UsersBooksRegistrationsRepo: UsersBooksRegistrationsRepo,
 		ActionsRepo:                 ActionsRepo,
@@ -63,4 +66,40 @@ func (p *Posts) Create(userID uint64, input *model.PostInput) (*model.PostInput,
 
 	//4. フロントにレスポンスを返す。
 	return input, nil
+}
+
+// GetOne は一意な投稿を取得
+func (p *Posts) GetOne(id uint64) (*model.Post, error) {
+
+	// ここでDBに対して何度かアクセスする
+	ubr, err := p.UsersBooksRegistrationsRepo.GetOne(id)
+	if err != nil {
+		return nil, model.NewError(model.ErrorResourceNotFound, "ubr not found")
+	}
+
+	user, err := p.UsersRepo.GetOne(ubr.UserID)
+	if err != nil {
+		return nil, model.NewError(model.ErrorResourceNotFound, "user not found")
+	}
+
+	book, err := p.BooksRepo.GetOne(ubr.BookID)
+	if err != nil {
+		return nil, model.NewError(model.ErrorResourceNotFound, "book not found")
+	}
+
+	actions, err := p.ActionsRepo.Get(ubr.ID)
+	if err != nil {
+		return nil, model.NewError(model.ErrorResourceNotFound, "actions not found")
+	}
+
+	// いい感じのモデルに上記で得られた値を代入する
+	post := &model.Post{
+		UserBookRegistration: *ubr,
+		DisplayName:          user.DisplayName,
+		AvartarURL:           user.AvartarURL,
+		BookBody:             book.BookBody,
+		ActionBody:           actions,
+	}
+
+	return post, nil
 }

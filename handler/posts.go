@@ -9,9 +9,9 @@ import (
 	"github.com/gin-gonic/gin/binding"
 )
 
-// PostPosts は投稿の新規登録
-func PostPosts(c *gin.Context) {
-	// user := c.MustGet("user").(*model.User)
+// PostPost は投稿の新規登録
+func PostPost(c *gin.Context) {
+	user := c.MustGet("user").(*model.User)
 
 	servicer := c.MustGet(registry.ServiceKey).(registry.Servicer)
 	postsService := servicer.NewPosts()
@@ -22,12 +22,27 @@ func PostPosts(c *gin.Context) {
 		return
 	}
 
-	// created, err := postsService.Create(user.ID, &input)
-	created, err := postsService.Create(1, &input)
+	created, err := postsService.Create(user.ID, &input)
+	// created, err := postsService.Create(1, &input)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, NewErrorResponse("400", ErrorUnknown, err.Error()))
 		return
 	}
 
 	c.JSON(http.StatusCreated, created)
+}
+
+// GetPost は投稿の新規登録
+func GetPost(c *gin.Context) {
+	postID := c.MustGet("post-id").(uint64)
+
+	servicer := c.MustGet(registry.ServiceKey).(registry.Servicer)
+	postsService := servicer.NewPosts()
+
+	post, err := postsService.GetOne(postID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, NewErrorResponse("400", ErrorUnknown, err.Error()))
+		return
+	}
+	c.JSON(http.StatusCreated, post)
 }
