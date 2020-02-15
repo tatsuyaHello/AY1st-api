@@ -9,21 +9,21 @@ import (
 	"github.com/gin-gonic/gin/binding"
 )
 
-// PostBooks は投稿の新規登録
-func PostBooks(c *gin.Context) {
-	user := c.MustGet("user").(*model.User)
+// PostPosts は投稿の新規登録
+func PostPosts(c *gin.Context) {
+	// user := c.MustGet("user").(*model.User)
 
 	servicer := c.MustGet(registry.ServiceKey).(registry.Servicer)
-	booksService := servicer.NewBooks()
+	postsService := servicer.NewPosts()
 
-	input := model.BookActionInput{}
+	input := model.PostInput{}
 	if err := c.ShouldBindWith(&input, binding.JSON); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, NewErrorResponse("400", ErrorParam, err.Error()))
 		return
 	}
 
-	created, err := booksService.Create(user.ID, &input)
-	// created, err := booksService.Create(1, &input)
+	// created, err := postsService.Create(user.ID, &input)
+	created, err := postsService.Create(1, &input)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, NewErrorResponse("400", ErrorUnknown, err.Error()))
 		return
