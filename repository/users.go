@@ -19,6 +19,7 @@ type UsersInterface interface {
 	GetOne(id uint64) (*model.User, error)
 	Delete(id uint64, sub string) error
 	Update(id uint64, input *model.UserUpdateInput) (*model.User, error)
+	UpdatePrice(id uint64, price uint64) (*model.User, error)
 	GetByDisplayName(displayName string) (*model.User, error)
 }
 
@@ -54,7 +55,7 @@ func (u *Users) GetMe(sub string) (*model.User, error) {
 	return me, nil
 }
 
-// GetOneByEmail はemailでユーザー情報を取得
+// GetByEmail はemailでユーザー情報を取得
 func (u *Users) GetByEmail(email string) (*model.User, error) {
 	logger := util.GetLogger()
 	user := &model.User{}
@@ -170,6 +171,7 @@ func (u *Users) Update(id uint64, input *model.UserUpdateInput) (*model.User, er
 		return nil, fmt.Errorf("no data to update")
 	}
 
+	user.ID = id
 	user.DisplayName = input.DisplayName
 	user.About = input.About
 	user.RecommendationBook = input.RecommendationBook
@@ -196,6 +198,23 @@ func (u *Users) GetByDisplayName(displayName string) (*model.User, error) {
 	}
 	if !ok {
 		return nil, fmt.Errorf("can not get user")
+	}
+	return user, nil
+}
+
+// UpdatePrice is
+func (u *Users) UpdatePrice(id uint64, price uint64) (*model.User, error) {
+	user, err := u.GetOne(id)
+	if err != nil {
+		return nil, fmt.Errorf("can not get user")
+	}
+	user.TotalPrice += price
+	affected, err := u.engine.ID(id).Update(user)
+	if err != nil {
+		return nil, err
+	}
+	if affected != 1 {
+		return nil, fmt.Errorf("no data affected")
 	}
 	return user, nil
 }

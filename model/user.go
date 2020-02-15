@@ -7,6 +7,7 @@ type User struct {
 	DisplayName        string `json:"display_name"`
 	AvartarURL         string `json:"avartar_url"`
 	About              string `json:"about"`
+	TotalPrice         uint64 `json:"total_price"`
 	RecommendationBook string `json:"recommendation_book"`
 	IsTermsOfService   uint64 `json:"is_terms_of_service"`
 }

@@ -138,10 +138,47 @@ func (p *Posts) Delete(id uint64) error {
 // Update は投稿を更新
 func (p *Posts) Update(input []*model.Action) ([]*model.Action, error) {
 
+	var res *model.Action
+	var err error
+	// Actionの更新を行う。
 	for _, v := range input {
-		_, err := p.ActionsRepo.Update(v)
+		res, err = p.ActionsRepo.Update(v)
 		if err != nil {
 			return nil, err
+		}
+	}
+
+	// 今回更新するusers_book_registration_idに関するis_finishedが全てtrueになっていれば、is_action_completedをtrueにしてuserのtotal_priceを増加させる。
+	actions, err := p.ActionsRepo.Get(res.UserBookRegistrationID)
+	if err != nil {
+		return nil, model.NewError(model.ErrorResourceNotFound, "actions not found")
+	}
+	isCompleted := true
+	for _, v := range actions {
+		if v.IsFinished == false {
+			isCompleted = false
+		}
+	}
+	if isCompleted == true {
+		// users_books_registrationsのis_action_completedをtrueにする
+		err := p.UsersBooksRegistrationsRepo.Update(res.UserBookRegistrationID)
+		if err != nil {
+			return nil, model.NewError(model.ErrorResourceNotFound, "users_books_registration cannot update")
+		}
+		// users_books_registrationsから情報を取得する
+		ubrs, err := p.UsersBooksRegistrationsRepo.GetOne(res.UserBookRegistrationID)
+		if err != nil {
+			return nil, model.NewError(model.ErrorResourceNotFound, "users_books_registration not found")
+		}
+		// booksから本の情報を取得する
+		books, err := p.BooksRepo.GetOne(ubrs.BookID)
+		if err != nil {
+			return nil, model.NewError(model.ErrorResourceNotFound, "book not found")
+		}
+		// usersのtotal_priceを更新する
+		_, err = p.UsersRepo.UpdatePrice(ubrs.UserID, books.Price)
+		if err != nil {
+			return nil, model.NewError(model.ErrorResourceNotFound, "user price cannot update")
 		}
 	}
 

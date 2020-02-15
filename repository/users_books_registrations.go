@@ -15,6 +15,7 @@ type UsersBooksRegistrationsInterface interface {
 	GetOne(id uint64) (*model.UserBookRegistration, error)
 	GetAll() ([]*model.Posts, error)
 	Delete(id uint64) error
+	Update(id uint64) error
 }
 
 // UsersBooksRegistrations is health check (debug)
@@ -38,7 +39,7 @@ func (ubr *UsersBooksRegistrations) Create(userID, bookID uint64) (*model.UserBo
 	ubrs.Common.UnsetDefaltCols()
 	ubrs.UserID = userID
 	ubrs.BookID = bookID
-	ubrs.IsActionCompleted = 0
+	ubrs.IsActionCompleted = false
 	session := ubr.engine.NewSession()
 	defer session.Close()
 	err := session.Begin()
@@ -141,5 +142,20 @@ func (ubr *UsersBooksRegistrations) Delete(id uint64) error {
 		return err
 	}
 
+	return nil
+}
+
+// Update は投稿の更新
+func (ubr *UsersBooksRegistrations) Update(id uint64) error {
+
+	ubrs := &model.UserBookRegistration{}
+
+	ubrs.IsActionCompleted = true
+	now := util.GetTimeNow()
+	ubrs.Common.UpdatedAt = &now
+	_, err := ubr.engine.ID(id).Update(ubrs)
+	if err != nil {
+		return err
+	}
 	return nil
 }

@@ -14,8 +14,10 @@ func defineRoutes(r gin.IRouter, authenticator Authenticator, userService servic
 
 	base := r.Group("/" + os.Getenv("ENVCODE"))
 
+	// 非ログイン状態で使用したい場合はこちらを使用する
 	public := base.Group("/", CacheMiddleware())
 
+	// ログイン状態で使用したい場合はこちらを使用する
 	withUser := base.Group("/",
 		AuthMiddleware(authenticator),
 		UserMiddleware(),
@@ -47,11 +49,11 @@ func defineRoutes(r gin.IRouter, authenticator Authenticator, userService servic
 
 	}
 
-	// Post ユーザの投稿
+	// Post
 	{
 		withUser.POST("/posts", handler.PostPost)
-		public.GET("/posts", handler.GetPostAll)
-		public.GET("/posts/:post-id", RequirePathParam("post-id"), handler.GetPost)
+		withUser.GET("/posts", handler.GetPostAll)
+		withUser.GET("/posts/:post-id", RequirePathParam("post-id"), handler.GetPost)
 		withUser.PUT("/posts/:post-id", RequirePathParam("post-id"), handler.PutPost)
 		withUser.DELETE("/posts/:post-id", RequirePathParam("post-id"), handler.DeletePost)
 	}
