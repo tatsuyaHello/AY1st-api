@@ -10,6 +10,7 @@ type PostsInterface interface {
 	Create(userID uint64, bookAction *model.PostInput) (*model.PostInput, error)
 	GetOne(id uint64) (*model.Post, error)
 	GetAll() ([]*model.Posts, error)
+	Delete(id uint64) error
 }
 
 // Posts is
@@ -115,4 +116,20 @@ func (p *Posts) GetAll() ([]*model.Posts, error) {
 	}
 
 	return posts, nil
+}
+
+// Delete は投稿削除
+func (p *Posts) Delete(id uint64) error {
+	_, err := p.UsersBooksRegistrationsRepo.GetOne(id)
+	if err != nil {
+		return model.NewError(model.ErrorResourceNotFound, "users_books_registration not found")
+	}
+
+	// 投稿の削除
+	err = p.UsersBooksRegistrationsRepo.Delete(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

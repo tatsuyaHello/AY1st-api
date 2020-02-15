@@ -14,6 +14,7 @@ type UsersBooksRegistrationsInterface interface {
 	Create(userID, bookID uint64) (*model.UserBookRegistration, error)
 	GetOne(id uint64) (*model.UserBookRegistration, error)
 	GetAll() ([]*model.Posts, error)
+	Delete(id uint64) error
 }
 
 // UsersBooksRegistrations is health check (debug)
@@ -116,4 +117,29 @@ func (ubr *UsersBooksRegistrations) GetAll() ([]*model.Posts, error) {
 		return nil, fmt.Errorf("can not get posts")
 	}
 	return posts, nil
+}
+
+// Delete は投稿の削除
+func (ubr *UsersBooksRegistrations) Delete(id uint64) error {
+	session := ubr.engine.NewSession()
+	defer session.Close()
+	err := session.Begin()
+
+	ubrs := &model.UserBookRegistration{}
+	affected, err := ubr.engine.ID(id).Delete(ubrs)
+	if err != nil {
+		session.Rollback()
+		return err
+	}
+	if affected != 1 {
+		session.Rollback()
+		return fmt.Errorf("could not delete users_books_registration-id = %v", id)
+	}
+
+	err = session.Commit()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
