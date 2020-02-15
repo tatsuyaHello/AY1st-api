@@ -4,6 +4,7 @@ import (
 	"AY1st/model"
 	"AY1st/util"
 	"fmt"
+	"strings"
 
 	"github.com/go-xorm/xorm"
 )
@@ -12,6 +13,7 @@ import (
 type UsersBooksRegistrationsInterface interface {
 	Create(userID, bookID uint64) (*model.UserBookRegistration, error)
 	GetOne(id uint64) (*model.UserBookRegistration, error)
+	GetAll() ([]*model.Posts, error)
 }
 
 // UsersBooksRegistrations is health check (debug)
@@ -85,4 +87,33 @@ func (ubr *UsersBooksRegistrations) GetOne(id uint64) (*model.UserBookRegistrati
 		return nil, fmt.Errorf("can not get ubr")
 	}
 	return ubrs, nil
+}
+
+// GetAll は全ての投稿を取得
+func (ubr *UsersBooksRegistrations) GetAll() ([]*model.Posts, error) {
+
+	s := ubr.engine.NewSession()
+
+	posts := []*model.Posts{}
+
+	s = s.Select(strings.Join([]string{
+		"users_books_registrations.*",
+		"users.display_name",
+		"users.avartar_url",
+		"books.rakuten_id",
+		"books.title",
+		"books.price",
+		"books.author",
+		"books.book_img_url",
+	}, " ,"))
+
+	s.Join("LEFT", "users", "users.id = users_books_registrations.user_id")
+	s.Join("LEFT", "books", "books.id = users_books_registrations.book_id")
+
+	err := s.Find(&posts)
+	if err != nil {
+		util.GetLogger().Error(err)
+		return nil, fmt.Errorf("can not get posts")
+	}
+	return posts, nil
 }

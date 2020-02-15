@@ -9,6 +9,7 @@ import (
 type PostsInterface interface {
 	Create(userID uint64, bookAction *model.PostInput) (*model.PostInput, error)
 	GetOne(id uint64) (*model.Post, error)
+	GetAll() ([]*model.Posts, error)
 }
 
 // Posts is
@@ -102,4 +103,16 @@ func (p *Posts) GetOne(id uint64) (*model.Post, error) {
 	}
 
 	return post, nil
+}
+
+// GetAll は全ての投稿を取得
+func (p *Posts) GetAll() ([]*model.Posts, error) {
+
+	// ここでDBに対して何度かアクセスする
+	posts, err := p.UsersBooksRegistrationsRepo.GetAll()
+	if err != nil {
+		return nil, model.NewError(model.ErrorResourceNotFound, "ubr not found")
+	}
+
+	return posts, nil
 }

@@ -14,3 +14,11 @@ type Post struct {
 	BookBody             `xorm:"extends"`
 	ActionBody           []*ActionBody `xorm:"extends" json:"action_body"`
 }
+
+// Posts is
+type Posts struct {
+	UserBookRegistration `xorm:"extends"`
+	DisplayName          string `json:"display_name"`
+	AvartarURL           string `json:"avartar_url"`
+	BookBody             `xorm:"extends"`
+}
