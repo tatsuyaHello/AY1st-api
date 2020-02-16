@@ -61,6 +61,7 @@ func AuthHandler(c *gin.Context, authenticator Authenticator) error {
 
 	// 認証したtokenを渡す
 	// c.Set("id", authedUser.Claims.(*jwt.StandardClaims).Id)
+	c.Set("email", authedUser.Email)
 	c.Set("sub", authedUser.Sub)
 	c.Set("token", authedUser.Token)
 	c.Set("userName", authedUser.Username)
@@ -70,6 +71,7 @@ func AuthHandler(c *gin.Context, authenticator Authenticator) error {
 
 // AuthenticatedUser は認証したユーザー情報です
 type AuthenticatedUser struct {
+	Email    string
 	Username string
 	Sub      string
 	Token    *jwt.Token
@@ -96,10 +98,15 @@ func AuthenticateUser(tokenString string, authenticator Authenticator) (*Authent
 	if !ok {
 		return nil, fmt.Errorf("wrong format token")
 	}
+	email, ok := claims["email"].(string)
+	if !ok {
+		return nil, fmt.Errorf("token must contain email")
+	}
 	sub := claims["sub"].(string)
 	username := claims["cognito:username"].(string)
 
 	authedUser := AuthenticatedUser{
+		Email:    email,
 		Username: username,
 		Sub:      sub,
 		Token:    token,

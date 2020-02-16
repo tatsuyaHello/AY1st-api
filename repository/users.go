@@ -78,6 +78,7 @@ func (u *Users) Create(input *model.UserCreateInput) (*model.User, error) {
 	user.Common.UnsetDefaltCols()
 	user.Email = input.Email
 	user.DisplayName = input.DisplayName
+	user.AvartarURL = model.DefaultImg
 	session := u.engine.NewSession()
 	defer session.Close()
 	err := session.Begin()
@@ -174,7 +175,8 @@ func (u *Users) Update(id uint64, input *model.UserUpdateInput) (*model.User, er
 	user.ID = id
 	user.DisplayName = input.DisplayName
 	user.About = input.About
-	user.RecommendationBook = input.RecommendationBook
+	user.AvartarURL = input.AvartarURL
+	user.RecommendationBookID = input.RecommendationBookID
 	user.IsTermsOfService = input.IsTermsOfService
 	now := util.GetTimeNow()
 	user.Common.UpdatedAt = &now

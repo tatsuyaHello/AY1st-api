@@ -1,19 +1,3 @@
--- usersテーブルを追加
-CREATE TABLE `users` (
-`id` BIGINT (10) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-`email` VARCHAR (255) NOT NULL COMMENT 'メールアドレス',
-`display_name` VARCHAR (255) NOT NULL COMMENT '表示名',
-`avartar_url` TEXT NOT NULL COMMENT 'プロフィール画像',
-`about` TEXT DEFAULT NULL COMMENT '自由記述欄',
-`total_price` BIGINT DEFAULT 0 COMMENT '読んだ本の合計金額',
-`recommendation_book` TEXT NULL COMMENT '推薦本URL',
-`is_terms_of_service` TINYINT (1) DEFAULT '0' COMMENT 'ユーザが利用規約に同意したか否かを表示',
-`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日',
-`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日',
-PRIMARY KEY (`id`),
-UNIQUE (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 -- booksテーブルを追加
 CREATE TABLE `books` (
 `id` BIGINT (10) NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -27,6 +11,23 @@ CREATE TABLE `books` (
 PRIMARY KEY (`id`),
 UNIQUE (`rakuten_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- usersテーブルを追加
+CREATE TABLE `users` (
+`id` BIGINT (10) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+`email` VARCHAR (255) NOT NULL COMMENT 'メールアドレス',
+`display_name` VARCHAR (255) NOT NULL COMMENT '表示名',
+`avartar_url` TEXT NOT NULL COMMENT 'プロフィール画像',
+`about` TEXT DEFAULT NULL COMMENT '自由記述欄',
+`total_price` BIGINT DEFAULT 0 COMMENT '読んだ本の合計金額',
+`recommendation_book_id` BIGINT (10) DEFAULT 1,
+`is_terms_of_service` TINYINT (1) DEFAULT '0' COMMENT 'ユーザが利用規約に同意したか否かを表示',
+`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日',
+`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日',
+PRIMARY KEY (`id`),
+UNIQUE (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- users_books_registrationsテーブルを追加
 CREATE TABLE `users_books_registrations` (
@@ -69,9 +70,9 @@ INSERT INTO `books` (`id`, `rakuten_id`, `title`, `price`, `author`, `book_img_u
 VALUES
 (1, '12345', '超集中力', 1000, 'hoge', 'hogehoge@@hogehoge.com');
 
-INSERT INTO `users` (`id`, `email`, `display_name`, `avartar_url`, `about`, `total_price`, `recommendation_book`, `is_terms_of_service`)
+INSERT INTO `users` (`id`, `email`, `display_name`, `avartar_url`, `about`, `total_price`, `recommendation_book_id`, `is_terms_of_service`)
 VALUES
-(1, 'yata62885@gmail.com', 'tatsuya', 'avartar_url.img', '僕はyamamura', 0, 'hogehoge@@hogehoge.com', 1);
+(1, 'yata62885@gmail.com', 'tatsuya', 'avartar_url.img', '僕はyamamura', 0, 1, 1);
 
 INSERT INTO `user_identities` (`id`, `sub`, `user_id`)
 VALUES
