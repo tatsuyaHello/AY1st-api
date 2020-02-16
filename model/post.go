@@ -22,3 +22,10 @@ type Posts struct {
 	AvartarURL           string `json:"avartar_url"`
 	BookBody             `xorm:"extends"`
 }
+
+// PostOfUser はあるユーザの投稿情報
+type PostOfUser struct {
+	UserBookRegistration `xorm:"extends"`
+	BookBody             `xorm:"extends" json:"book_data"`
+	Action               []*Action `xorm:"extends" json:"action"`
+}

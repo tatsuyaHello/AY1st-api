@@ -56,6 +56,12 @@ func defineRoutes(r gin.IRouter, authenticator Authenticator, userService servic
 		withUser.GET("/posts/:post-id", RequirePathParam("post-id"), handler.GetPost)
 		withUser.PATCH("/posts/:post-id", RequirePathParam("post-id"), handler.PutPost)
 		withUser.DELETE("/posts/:post-id", RequirePathParam("post-id"), handler.DeletePost)
+		withUser.GET("/posts_users/:user-id", RequirePathParam("user-id"), handler.GetPostOfUser)
+	}
+
+	// Book
+	{
+		withUser.GET("/books/:book-id", RequirePathParam("book-id"), handler.GetBook)
 	}
 
 }

@@ -32,7 +32,7 @@ func PostPost(c *gin.Context) {
 	c.JSON(http.StatusCreated, created)
 }
 
-// GetPost は投稿の新規登録
+// GetPost は投稿の取得
 func GetPost(c *gin.Context) {
 	postID := c.MustGet("post-id").(uint64)
 
@@ -125,4 +125,20 @@ func PutPost(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, updated)
+}
+
+// GetPostOfUser は一意なユーザの投稿情報
+func GetPostOfUser(c *gin.Context) {
+
+	userID := c.MustGet("user-id").(uint64)
+
+	servicer := c.MustGet(registry.ServiceKey).(registry.Servicer)
+	postsService := servicer.NewPosts()
+
+	posts, err := postsService.GetPostOfUser(userID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, NewErrorResponse("400", ErrorUnknown, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, posts)
 }
