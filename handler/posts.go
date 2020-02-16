@@ -126,3 +126,19 @@ func PutPost(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, updated)
 }
+
+// GetPostOfUser は一意なユーザの投稿情報
+func GetPostOfUser(c *gin.Context) {
+
+	userID := c.MustGet("user-id").(uint64)
+
+	servicer := c.MustGet(registry.ServiceKey).(registry.Servicer)
+	postsService := servicer.NewPosts()
+
+	posts, err := postsService.GetPostOfUser(userID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, NewErrorResponse("400", ErrorUnknown, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, posts)
+}

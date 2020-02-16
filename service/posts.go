@@ -12,6 +12,7 @@ type PostsInterface interface {
 	GetAll() ([]*model.Post, error)
 	Delete(id uint64) error
 	Update(input []*model.Action) ([]*model.Action, error)
+	GetPostOfUser(userID uint64) ([]*model.PostOfUser, error)
 }
 
 // Posts is
@@ -197,4 +198,28 @@ func (p *Posts) Update(input []*model.Action) ([]*model.Action, error) {
 	}
 
 	return result, nil
+}
+
+// GetPostOfUser は全ての投稿を取得
+func (p *Posts) GetPostOfUser(userID uint64) ([]*model.PostOfUser, error) {
+
+	// ここでDBに対して何度かアクセスする
+	posts, err := p.UsersBooksRegistrationsRepo.GetPostOfUser(userID)
+	if err != nil {
+		return nil, model.NewError(model.ErrorResourceNotFound, "ubr not found")
+	}
+
+	for i, v := range posts {
+		actions, err := p.ActionsRepo.Get(v.ID)
+		if err != nil {
+			return nil, model.NewError(model.ErrorResourceNotFound, "action not found")
+		}
+		var acts []*model.Action
+		for _, action := range actions {
+			acts = append(acts, action)
+		}
+		posts[i].Action = acts
+	}
+
+	return posts, nil
 }

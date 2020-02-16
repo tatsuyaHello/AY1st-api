@@ -16,6 +16,7 @@ type UsersBooksRegistrationsInterface interface {
 	GetAll() ([]*model.Post, error)
 	Delete(id uint64) error
 	Update(id uint64) error
+	GetPostOfUser(userID uint64) ([]*model.PostOfUser, error)
 }
 
 // UsersBooksRegistrations is health check (debug)
@@ -158,4 +159,34 @@ func (ubr *UsersBooksRegistrations) Update(id uint64) error {
 		return err
 	}
 	return nil
+}
+
+// GetPostOfUser は全ての投稿を取得
+func (ubr *UsersBooksRegistrations) GetPostOfUser(userID uint64) ([]*model.PostOfUser, error) {
+
+	s := ubr.engine.NewSession()
+
+	posts := []*model.PostOfUser{}
+
+	s = s.Table("users_books_registrations")
+
+	s = s.Where("user_id = ?", userID)
+
+	s = s.Select(strings.Join([]string{
+		"users_books_registrations.*",
+		"books.rakuten_id",
+		"books.title",
+		"books.price",
+		"books.author",
+		"books.book_img_url",
+	}, " ,"))
+
+	s.Join("LEFT", "books", "books.id = users_books_registrations.book_id")
+
+	err := s.Find(&posts)
+	if err != nil {
+		util.GetLogger().Error(err)
+		return nil, fmt.Errorf("can not get posts")
+	}
+	return posts, nil
 }
