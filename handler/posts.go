@@ -32,7 +32,7 @@ func PostPost(c *gin.Context) {
 	c.JSON(http.StatusCreated, created)
 }
 
-// GetPost は投稿の新規登録
+// GetPost は投稿の取得
 func GetPost(c *gin.Context) {
 	postID := c.MustGet("post-id").(uint64)
 

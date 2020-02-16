@@ -60,7 +60,7 @@ func PostUser(c *gin.Context) {
 		return
 	}
 
-	created, err := usersService.Create(&input)
+	_, err = usersService.Create(&input)
 	if err != nil {
 		errCode, _ := err.(*model.WrappedError)
 		if IsUserSubDupulicateError(err) {
@@ -71,7 +71,7 @@ func PostUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, created)
+	c.JSON(http.StatusOK, input)
 }
 
 // PutUser はユーザー更新
