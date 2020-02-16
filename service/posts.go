@@ -9,7 +9,7 @@ import (
 type PostsInterface interface {
 	Create(userID uint64, bookAction *model.PostInput) (*model.PostInput, error)
 	GetOne(id uint64) (*model.Post, error)
-	GetAll() ([]*model.Posts, error)
+	GetAll() ([]*model.Post, error)
 	Delete(id uint64) error
 	Update(input []*model.Action) ([]*model.Action, error)
 }
@@ -101,19 +101,31 @@ func (p *Posts) GetOne(id uint64) (*model.Post, error) {
 		DisplayName:          user.DisplayName,
 		AvartarURL:           user.AvartarURL,
 		BookBody:             book.BookBody,
-		ActionBody:           actions,
+		Action:               actions,
 	}
 
 	return post, nil
 }
 
 // GetAll は全ての投稿を取得
-func (p *Posts) GetAll() ([]*model.Posts, error) {
+func (p *Posts) GetAll() ([]*model.Post, error) {
 
 	// ここでDBに対して何度かアクセスする
 	posts, err := p.UsersBooksRegistrationsRepo.GetAll()
 	if err != nil {
 		return nil, model.NewError(model.ErrorResourceNotFound, "ubr not found")
+	}
+
+	for i, v := range posts {
+		actions, err := p.ActionsRepo.Get(v.ID)
+		if err != nil {
+			return nil, model.NewError(model.ErrorResourceNotFound, "action not found")
+		}
+		var acts []*model.Action
+		for _, action := range actions {
+			acts = append(acts, action)
+		}
+		posts[i].Action = acts
 	}
 
 	return posts, nil
@@ -138,6 +150,7 @@ func (p *Posts) Delete(id uint64) error {
 // Update は投稿を更新
 func (p *Posts) Update(input []*model.Action) ([]*model.Action, error) {
 
+	var result []*model.Action
 	var res *model.Action
 	var err error
 	// Actionの更新を行う。
@@ -146,6 +159,7 @@ func (p *Posts) Update(input []*model.Action) ([]*model.Action, error) {
 		if err != nil {
 			return nil, err
 		}
+		result = append(result, res)
 	}
 
 	// 今回更新するusers_book_registration_idに関するis_finishedが全てtrueになっていれば、is_action_completedをtrueにしてuserのtotal_priceを増加させる。
@@ -182,5 +196,5 @@ func (p *Posts) Update(input []*model.Action) ([]*model.Action, error) {
 		}
 	}
 
-	return input, nil
+	return result, nil
 }

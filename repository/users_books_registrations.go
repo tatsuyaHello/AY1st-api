@@ -13,7 +13,7 @@ import (
 type UsersBooksRegistrationsInterface interface {
 	Create(userID, bookID uint64) (*model.UserBookRegistration, error)
 	GetOne(id uint64) (*model.UserBookRegistration, error)
-	GetAll() ([]*model.Posts, error)
+	GetAll() ([]*model.Post, error)
 	Delete(id uint64) error
 	Update(id uint64) error
 }
@@ -92,11 +92,11 @@ func (ubr *UsersBooksRegistrations) GetOne(id uint64) (*model.UserBookRegistrati
 }
 
 // GetAll は全ての投稿を取得
-func (ubr *UsersBooksRegistrations) GetAll() ([]*model.Posts, error) {
+func (ubr *UsersBooksRegistrations) GetAll() ([]*model.Post, error) {
 
 	s := ubr.engine.NewSession()
 
-	posts := []*model.Posts{}
+	posts := []*model.Post{}
 
 	s = s.Select(strings.Join([]string{
 		"users_books_registrations.*",

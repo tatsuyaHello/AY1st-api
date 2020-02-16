@@ -12,7 +12,7 @@ import (
 // ActionsInterface is health check (debug)
 type ActionsInterface interface {
 	Create(ubrID uint64, content string) (*model.Action, error)
-	Get(id uint64) ([]*model.ActionBody, error)
+	Get(id uint64) ([]*model.Action, error)
 	Update(input *model.Action) (*model.Action, error)
 }
 
@@ -66,8 +66,8 @@ func (a *Actions) Create(ubrID uint64, content string) (*model.Action, error) {
 }
 
 // Get はアクションを取得
-func (a *Actions) Get(ubrID uint64) ([]*model.ActionBody, error) {
-	actions := []*model.ActionBody{}
+func (a *Actions) Get(ubrID uint64) ([]*model.Action, error) {
+	actions := []*model.Action{}
 	// actions := new(model.ActionBody)
 	// actions := make([]*model.ActionBody, 0)
 	err := a.engine.Where("user_book_registration_id = ?", ubrID).Find(&actions)
