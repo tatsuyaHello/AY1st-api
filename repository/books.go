@@ -12,7 +12,7 @@ import (
 // BooksInterface is health check (debug)
 type BooksInterface interface {
 	Create(input *model.BookBody) (*model.Book, error)
-	GetByRakutenID(rakutenID string) (*model.Book, error)
+	GetByIsbn(isbn uint64) (*model.Book, error)
 	GetOne(id uint64) (*model.Book, error)
 }
 
@@ -60,7 +60,7 @@ func (b *Books) Create(input *model.BookBody) (*model.Book, error) {
 		return nil, err
 	}
 
-	outputBook, err := b.GetByRakutenID(input.RakutenID)
+	outputBook, err := b.GetByIsbn(input.Isbn)
 	if err != nil {
 		util.GetLogger().Error(err)
 		return nil, fmt.Errorf("can not get book")
@@ -69,10 +69,10 @@ func (b *Books) Create(input *model.BookBody) (*model.Book, error) {
 	return outputBook, nil
 }
 
-// GetByRakutenID は一意なユーザーを取得
-func (b *Books) GetByRakutenID(id string) (*model.Book, error) {
+// GetByIsbn は一意なユーザーを取得
+func (b *Books) GetByIsbn(isbn uint64) (*model.Book, error) {
 	book := &model.Book{}
-	ok, err := b.engine.Where("rakuten_id = ?", id).Get(book)
+	ok, err := b.engine.Where("isbn = ?", isbn).Get(book)
 	if err != nil {
 		util.GetLogger().Error(err)
 		return nil, fmt.Errorf("can not get book")

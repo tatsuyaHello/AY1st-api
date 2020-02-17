@@ -3,6 +3,7 @@ package repository
 import (
 	"AY1st/model"
 	"AY1st/util"
+	"AY1st/util/ptr"
 	"fmt"
 	"strings"
 
@@ -40,7 +41,7 @@ func (ubr *UsersBooksRegistrations) Create(userID, bookID uint64) (*model.UserBo
 	ubrs.Common.UnsetDefaltCols()
 	ubrs.UserID = userID
 	ubrs.BookID = bookID
-	ubrs.IsActionCompleted = false
+	ubrs.IsActionCompleted = ptr.False()
 	session := ubr.engine.NewSession()
 	defer session.Close()
 	err := session.Begin()
@@ -102,8 +103,10 @@ func (ubr *UsersBooksRegistrations) GetAll() ([]*model.Post, error) {
 	s = s.Select(strings.Join([]string{
 		"users_books_registrations.*",
 		"users.display_name",
-		"users.avartar_url",
-		"books.rakuten_id",
+		"users.avatar_url",
+		"books.rakuten_url",
+		"books.rakuten_review",
+		"books.isbn",
 		"books.title",
 		"books.price",
 		"books.author",
@@ -151,7 +154,7 @@ func (ubr *UsersBooksRegistrations) Update(id uint64) error {
 
 	ubrs := &model.UserBookRegistration{}
 
-	ubrs.IsActionCompleted = true
+	ubrs.IsActionCompleted = ptr.True()
 	now := util.GetTimeNow()
 	ubrs.Common.UpdatedAt = &now
 	_, err := ubr.engine.ID(id).Update(ubrs)
@@ -174,7 +177,9 @@ func (ubr *UsersBooksRegistrations) GetPostOfUser(userID uint64) ([]*model.PostO
 
 	s = s.Select(strings.Join([]string{
 		"users_books_registrations.*",
-		"books.rakuten_id",
+		"books.rakuten_url",
+		"books.rakuten_review",
+		"books.isbn",
 		"books.title",
 		"books.price",
 		"books.author",

@@ -10,7 +10,7 @@ type UserBookRegistration struct {
 type UserBookRegistrationBody struct {
 	UserID            uint64 `json:"user_id"`
 	BookID            uint64 `json:"book_id"`
-	IsActionCompleted bool   `json:"is_action_completed"`
+	IsActionCompleted *bool  `json:"is_action_completed"`
 }
 
 // TableName represents db table name

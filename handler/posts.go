@@ -112,12 +112,20 @@ func PutPost(c *gin.Context) {
 		return
 	}
 
-	input := []*model.Action{}
+	input := []*model.ActionUpdateInput{}
 	err = c.ShouldBindWith(&input, binding.JSON)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, NewErrorResponseDetailed("400", ErrorParam, "request body mismatch", err.Error()))
 		return
 	}
+
+	// actionのidがユーザが保持しているものかどうかを確認
+
+	//TODO 他人のActionを更新できてしまう
+	// user_book_registrationのidからuser_idを検索する。
+	// それが、ヘッダーのユーザIDと一致するかどうか確認する。
+	// actionのidからuser_book_registration_idを取得する。
+	// 上記で得たactionのidが入力されたactionIDと同じ確認する。
 
 	updated, err := postsService.Update(input)
 	if err != nil {

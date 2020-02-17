@@ -5,7 +5,7 @@ type User struct {
 	Common               `xorm:"extends"`
 	Email                string `json:"email"`
 	DisplayName          string `json:"display_name"`
-	AvartarURL           string `json:"avartar_url"`
+	AvatarURL            string `json:"avatar_url"`
 	About                string `json:"about"`
 	TotalPrice           uint64 `json:"total_price"`
 	RecommendationBookID uint64 `json:"recommendation_book_id"`
@@ -21,7 +21,7 @@ type UserCreateInput struct {
 //UserUpdateInput はユーザ更新のモデル
 type UserUpdateInput struct {
 	DisplayName          string `json:"display_name" binding:"required"`
-	AvartarURL           string `json:"avartar_url"`
+	AvatarURL            string `json:"avatar_url"`
 	About                string `json:"about"`
 	RecommendationBookID uint64 `json:"recommendation_book_id"`
 	IsTermsOfService     uint64 `json:"is_terms_of_service"`

@@ -1,15 +1,17 @@
 -- booksテーブルを追加
 CREATE TABLE `books` (
 `id` BIGINT (10) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-`rakuten_id` VARCHAR (255) NOT NULL COMMENT '楽天APIから発行される一意なID',
 `title` VARCHAR (255) NOT NULL COMMENT 'タイトル',
 `price` BIGINT (10) NOT NULL COMMENT '価格',
 `author` VARCHAR (255) NOT NULL COMMENT '著者',
 `book_img_url` TEXT NOT NULL COMMENT '本URL',
+`rakuten_url` TEXT NOT NULL COMMENT '楽天ページへのURL',
+`rakuten_review` INT NOT NULL COMMENT '楽天での評価',
+`isbn` BIGINT (10) NOT NULL COMMENT '楽天APIから発行される一意なID',
 `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登録日',
 `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日',
 PRIMARY KEY (`id`),
-UNIQUE (`rakuten_id`)
+UNIQUE (`isbn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- usersテーブルを追加
@@ -17,7 +19,7 @@ CREATE TABLE `users` (
 `id` BIGINT (10) NOT NULL AUTO_INCREMENT COMMENT 'ID',
 `email` VARCHAR (255) NOT NULL COMMENT 'メールアドレス',
 `display_name` VARCHAR (255) NOT NULL COMMENT '表示名',
-`avartar_url` TEXT NOT NULL COMMENT 'プロフィール画像',
+`avatar_url` TEXT NOT NULL COMMENT 'プロフィール画像',
 `about` TEXT DEFAULT NULL COMMENT '自由記述欄',
 `total_price` BIGINT DEFAULT 0 COMMENT '読んだ本の合計金額',
 `recommendation_book_id` BIGINT (10) DEFAULT 1,
@@ -66,13 +68,13 @@ CONSTRAINT fk_useri_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CAS
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-INSERT INTO `books` (`id`, `rakuten_id`, `title`, `price`, `author`, `book_img_url`)
+INSERT INTO `books` (`id`, `title`, `price`, `author`, `book_img_url`, `rakuten_url`, `rakuten_review`, `isbn`)
 VALUES
-(1, '12345', '超集中力', 1000, 'hoge', 'hogehoge@@hogehoge.com');
+(1, '超集中力', 1000, 'hoge', 'hogehoge@@hogehoge.com', '楽天のURL.com', 3, 23);
 
-INSERT INTO `users` (`id`, `email`, `display_name`, `avartar_url`, `about`, `total_price`, `recommendation_book_id`, `is_terms_of_service`)
+INSERT INTO `users` (`id`, `email`, `display_name`, `avatar_url`, `about`, `total_price`, `recommendation_book_id`, `is_terms_of_service`)
 VALUES
-(1, 'yata62885@gmail.com', 'tatsuya', 'avartar_url.img', '僕はyamamura', 0, 1, 1);
+(1, 'yata62885@gmail.com', 'tatsuya', 'avatar_url.img', '僕はyamamura', 0, 1, 1);
 
 INSERT INTO `user_identities` (`id`, `sub`, `user_id`)
 VALUES
