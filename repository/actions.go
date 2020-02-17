@@ -5,6 +5,7 @@ import (
 
 	"AY1st/model"
 	"AY1st/util"
+	"AY1st/util/ptr"
 
 	"github.com/go-xorm/xorm"
 )
@@ -13,7 +14,8 @@ import (
 type ActionsInterface interface {
 	Create(ubrID uint64, content string) (*model.Action, error)
 	Get(id uint64) ([]*model.Action, error)
-	Update(input *model.Action) (*model.Action, error)
+	Update(input *model.ActionUpdateInput) (*model.Action, error)
+	GetOne(id uint64) (*model.Action, error)
 }
 
 // Actions is health check (debug)
@@ -35,7 +37,7 @@ func (a *Actions) Create(ubrID uint64, content string) (*model.Action, error) {
 
 	action := &model.Action{}
 	action.Common.UnsetDefaltCols()
-	action.IsFinished = false
+	action.IsFinished = ptr.False()
 	action.UserBookRegistrationID = ubrID
 	action.Content = content
 	session := a.engine.NewSession()
@@ -79,17 +81,37 @@ func (a *Actions) Get(ubrID uint64) ([]*model.Action, error) {
 }
 
 // Update は投稿の更新
-func (a *Actions) Update(input *model.Action) (*model.Action, error) {
+func (a *Actions) Update(input *model.ActionUpdateInput) (*model.Action, error) {
 
-	action := &model.Action{}
-
-	action.ActionBody = input.ActionBody
-	action.ID = input.ID
+	value := &model.Action{}
+	value.Common.ID = input.ID
+	value.IsFinished = input.IsFinished
+	value.Content = input.Content
 	now := util.GetTimeNow()
-	action.Common.UpdatedAt = &now
-	_, err := a.engine.ID(action.ID).Update(action)
+	value.UpdatedAt = &now
+
+	_, err := a.engine.ID(input.ID).Update(value)
 	if err != nil {
 		return nil, err
+	}
+
+	res, err := a.GetOne(input.ID)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+// GetOne は一意なアクションを取得
+func (a *Actions) GetOne(id uint64) (*model.Action, error) {
+	action := &model.Action{}
+	ok, err := a.engine.ID(id).Get(action)
+	if err != nil {
+		util.GetLogger().Error(err)
+		return nil, fmt.Errorf("can not get action")
+	}
+	if !ok {
+		return nil, fmt.Errorf("can not get action")
 	}
 	return action, nil
 }

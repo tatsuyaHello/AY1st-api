@@ -3,6 +3,7 @@ package service
 import (
 	"AY1st/model"
 	"AY1st/repository"
+	"AY1st/util/ptr"
 )
 
 // PostsInterface is
@@ -11,7 +12,7 @@ type PostsInterface interface {
 	GetOne(id uint64) (*model.Post, error)
 	GetAll() ([]*model.Post, error)
 	Delete(id uint64) error
-	Update(input []*model.Action) ([]*model.Action, error)
+	Update(input []*model.ActionUpdateInput) ([]*model.Action, error)
 	GetPostOfUser(userID uint64) ([]*model.PostOfUser, error)
 }
 
@@ -38,7 +39,7 @@ func NewPosts(UsersRepo repository.UsersInterface, BooksRepo repository.BooksInt
 func (p *Posts) Create(userID uint64, input *model.PostInput) (*model.PostInput, error) {
 
 	//1. booksテーブルに既に存在するか否かを見る
-	bo, err := p.BooksRepo.GetByRakutenID(input.RakutenID)
+	bo, err := p.BooksRepo.GetByIsbn(input.Isbn)
 	if err != nil {
 		return nil, model.NewError(model.ErrorResourceNotFound, "book not found")
 	}
@@ -100,7 +101,7 @@ func (p *Posts) GetOne(id uint64) (*model.Post, error) {
 	post := &model.Post{
 		UserBookRegistration: *ubr,
 		DisplayName:          user.DisplayName,
-		AvartarURL:           user.AvartarURL,
+		AvatarURL:            user.AvatarURL,
 		BookBody:             book.BookBody,
 		Action:               actions,
 	}
@@ -149,7 +150,7 @@ func (p *Posts) Delete(id uint64) error {
 }
 
 // Update は投稿を更新
-func (p *Posts) Update(input []*model.Action) ([]*model.Action, error) {
+func (p *Posts) Update(input []*model.ActionUpdateInput) ([]*model.Action, error) {
 
 	var result []*model.Action
 	var res *model.Action
@@ -170,11 +171,11 @@ func (p *Posts) Update(input []*model.Action) ([]*model.Action, error) {
 	}
 	isCompleted := true
 	for _, v := range actions {
-		if v.IsFinished == false {
-			isCompleted = false
+		if *v.IsFinished == *ptr.False() {
+			isCompleted = *ptr.False()
 		}
 	}
-	if isCompleted == true {
+	if isCompleted == *ptr.True() {
 		// users_books_registrationsのis_action_completedをtrueにする
 		err := p.UsersBooksRegistrationsRepo.Update(res.UserBookRegistrationID)
 		if err != nil {

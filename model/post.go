@@ -10,7 +10,7 @@ type PostInput struct {
 type Post struct {
 	UserBookRegistration `xorm:"extends"`
 	DisplayName          string `json:"display_name"`
-	AvartarURL           string `json:"avartar_url"`
+	AvatarURL            string `json:"avatar_url"`
 	BookBody             `xorm:"extends" json:"book_data"`
 	Action               []*Action `xorm:"extends" json:"action"`
 }
@@ -19,7 +19,7 @@ type Post struct {
 type Posts struct {
 	UserBookRegistration `xorm:"extends"`
 	DisplayName          string `json:"display_name"`
-	AvartarURL           string `json:"avartar_url"`
+	AvatarURL            string `json:"avatar_url"`
 	BookBody             `xorm:"extends"`
 }
 
