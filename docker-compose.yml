@@ -8,9 +8,9 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       TZ: Asia/Tokyo
     ports:
-      - 3306:3306
+      - 9306:3306
     volumes:
-      - mysql:/var/lib/mysql
+      - ay1st-mysql:/var/lib/mysql
       - ./fixtures:/var/fixtures/
 
   phpmyadmin:
@@ -20,9 +20,9 @@ services:
       PMA_USER: root
       PMA_PASSWORD:
     ports:
-      - 9980:80
+      - 9180:80
     depends_on:
       - mysql
 
 volumes:
-  mysql:
+  ay1st-mysql:
