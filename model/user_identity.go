@@ -4,7 +4,7 @@ package model
 type UserIdentity struct {
 	Common `xorm:"extends"`
 	Sub    string `json:"sub"`
-	UserID uint64 `json:"user_id"`
+	UserID uint64 `json:"userId"`
 }
 
 // TableName represents db table name

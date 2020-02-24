@@ -7,8 +7,8 @@ import (
 // Common テーブル共通項目を定義
 type Common struct {
 	ID        uint64     `xorm:"pk autoincr index(pk)" json:"id"`
-	CreatedAt *time.Time `xorm:"created notnull" json:"created_at"`
-	UpdatedAt *time.Time `xorm:"updated notnull" json:"updated_at"`
+	CreatedAt *time.Time `xorm:"created notnull" json:"createdAt"`
+	UpdatedAt *time.Time `xorm:"updated notnull" json:"updatedAt"`
 }
 
 // TableName this should not be used

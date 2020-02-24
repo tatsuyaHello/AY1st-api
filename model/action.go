@@ -8,8 +8,8 @@ type Action struct {
 
 // ActionBody is
 type ActionBody struct {
-	IsFinished             *bool  `json:"is_finished"`
-	UserBookRegistrationID uint64 `json:"user_book_registration_id"`
+	IsFinished             *bool  `json:"isFinished"`
+	UserBookRegistrationID uint64 `json:"userBookRegistrationId"`
 	Content                string `json:"content"`
 }
 
@@ -21,7 +21,7 @@ type ActionInputBody struct {
 //ActionUpdateInput はユーザ更新のモデル
 type ActionUpdateInput struct {
 	ID         uint64 `xorm:"pk autoincr index(pk)" json:"id"`
-	IsFinished *bool  `json:"is_finished"`
+	IsFinished *bool  `json:"isFinished"`
 	Content    string `json:"content"`
 }
 
