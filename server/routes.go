@@ -42,7 +42,7 @@ func defineRoutes(r gin.IRouter, authenticator Authenticator, userService servic
 	// User
 	{
 		public.POST("/signup", handler.PostUser)
-		withUser.GET("me", handler.GetMe)
+		withUser.GET("/me", handler.GetMe)
 		withUser.GET("/users/:user-id", RequirePathParam("user-id"), handler.GetUser)
 		withUser.PATCH("/users/:user-id", RequirePathParam("user-id"), handler.PutUser)
 		withUser.DELETE("/users/:user-id", RequirePathParam("user-id"), handler.DeleteUser)

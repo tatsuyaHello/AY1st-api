@@ -14,8 +14,9 @@ type User struct {
 
 //UserCreateInput はユーザ作成のモデル
 type UserCreateInput struct {
-	Email       string `json:"email" binding:"required"`
-	DisplayName string `json:"display_name" binding:"required"`
+	Email            string `json:"email" binding:"required"`
+	DisplayName      string `json:"display_name" binding:"required"`
+	IsTermsOfService uint64 `json:"is_terms_of_service" binding:"required"`
 }
 
 //UserUpdateInput はユーザ更新のモデル

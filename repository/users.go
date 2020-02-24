@@ -78,6 +78,7 @@ func (u *Users) Create(input *model.UserCreateInput) (*model.User, error) {
 	user.Common.UnsetDefaltCols()
 	user.Email = input.Email
 	user.DisplayName = input.DisplayName
+	user.IsTermsOfService = input.IsTermsOfService
 	user.AvatarURL = model.DefaultImg
 	session := u.engine.NewSession()
 	defer session.Close()
