@@ -2,7 +2,6 @@ package server
 
 import (
 	"net/http"
-	"os"
 
 	"AY1st/handler"
 	"AY1st/service"
@@ -12,13 +11,11 @@ import (
 
 func defineRoutes(r gin.IRouter, authenticator Authenticator, userService service.UsersInterface, cacheMaxAge int64) {
 
-	base := r.Group("/" + os.Getenv("ENVCODE"))
-
 	// 非ログイン状態で使用したい場合はこちらを使用する
-	public := base.Group("/", CacheMiddleware())
+	public := r.Group("/", CacheMiddleware())
 
 	// ログイン状態で使用したい場合はこちらを使用する
-	withUser := base.Group("/",
+	withUser := r.Group("/",
 		AuthMiddleware(authenticator),
 		UserMiddleware(),
 		CacheMiddleware(),
@@ -32,11 +29,11 @@ func defineRoutes(r gin.IRouter, authenticator Authenticator, userService servic
 
 	// Health Check
 	{
-		base.GET("ping/json", handler.PingJSON)
-		base.GET("health", func(c *gin.Context) {
+		r.GET("ping/json", handler.PingJSON)
+		r.GET("health", func(c *gin.Context) {
 			c.Status(http.StatusOK)
 		})
-		base.GET("db/health", handler.GetHealth)
+		r.GET("db/health", handler.GetHealth)
 	}
 
 	// User
