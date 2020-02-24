@@ -28,3 +28,4 @@ docker-up:
 
 init-db-local: docker-up
 	DATABASE_NAME=ay1st-local sh ./fixtures/init_db_local.sh
+
