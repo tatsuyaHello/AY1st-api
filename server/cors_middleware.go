@@ -25,7 +25,7 @@ func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if enableCORS {
 			c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-			c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, UPDATE, OPTIONS")
+			c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, UPDATE, OPTIONS")
 			c.Writer.Header().Set("Access-Control-Allow-Headers", accessControlAllowHeaders)
 			c.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length")
 			c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
