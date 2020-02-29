@@ -8,6 +8,7 @@ import (
 // BooksInterface is
 type BooksInterface interface {
 	GetOne(id uint64) (*model.Book, error)
+	Create(input *model.BookBody) (*model.Book, error)
 }
 
 // Books is
@@ -32,4 +33,28 @@ func (b *Books) GetOne(id uint64) (*model.Book, error) {
 	}
 
 	return bo, nil
+}
+
+// Create はPost新規登録
+func (b *Books) Create(input *model.BookBody) (*model.Book, error) {
+
+	//1. booksテーブルに既に存在するか否かを見る
+	bo, err := b.BooksRepo.GetByIsbn(input.Isbn)
+	if err != nil {
+		return nil, model.NewError(model.ErrorResourceNotFound, "book not found")
+	}
+	//1.1. 存在しなければ保存する。
+	book := &model.Book{}
+	if bo == nil {
+		book, err = b.BooksRepo.Create(input)
+		if err != nil {
+			return nil, model.NewError(model.ErrorResourceNotFound, "book not found")
+		}
+	}
+	if bo != nil {
+		book = bo
+	}
+
+	//4. フロントにレスポンスを返す。
+	return book, nil
 }
