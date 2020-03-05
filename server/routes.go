@@ -59,6 +59,7 @@ func defineRoutes(r gin.IRouter, authenticator Authenticator, userService servic
 	// Book
 	{
 		withUser.GET("/books/:book-id", RequirePathParam("book-id"), handler.GetBook)
+		withUser.POST("/books", handler.PostBook)
 	}
 
 }

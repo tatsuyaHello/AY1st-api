@@ -132,7 +132,8 @@ func PutPost(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, NewErrorResponse("400", ErrorParam, err.Error()))
 		return
 	}
-	c.JSON(http.StatusOK, updated)
+	post, err = postsService.GetOne(updated[0].UserBookRegistrationID)
+	c.JSON(http.StatusOK, post)
 }
 
 // GetPostOfUser は一意なユーザの投稿情報
