@@ -66,17 +66,17 @@ func (ubr *UsersBooksRegistrations) Create(userID, bookID uint64) (*model.UserBo
 		return nil, err
 	}
 
-	res := &model.UserBookRegistration{}
-	ok, err := ubr.engine.Where("user_id = ? AND book_id = ?", userID, bookID).Get(res)
-	if err != nil {
-		util.GetLogger().Error(err)
-		return nil, fmt.Errorf("can not get book")
-	}
-	if !ok {
-		return nil, fmt.Errorf("can not get book")
-	}
+	// res := &model.UserBookRegistration{}
+	// ok, err := ubr.engine.Where("user_id = ? AND book_id = ?", userID, bookID).Get(res)
+	// if err != nil {
+	// 	util.GetLogger().Error(err)
+	// 	return nil, fmt.Errorf("can not get book")
+	// }
+	// if !ok {
+	// 	return nil, fmt.Errorf("can not get book")
+	// }
 
-	return res, nil
+	return ubrs, nil
 }
 
 // GetOne は一意な投稿の結びつきを取得
