@@ -8,9 +8,9 @@ type Action struct {
 
 // ActionBody is
 type ActionBody struct {
-	IsFinished             *bool  `json:"isFinished"`
-	UserBookRegistrationID uint64 `json:"userBookRegistrationId"`
-	Content                string `json:"content"`
+	IsFinished             *bool   `json:"isFinished"`
+	UserBookRegistrationID uint64  `json:"userBookRegistrationId"`
+	Content                *string `json:"content"`
 }
 
 // ActionInputBody is
@@ -20,9 +20,9 @@ type ActionInputBody struct {
 
 //ActionUpdateInput はユーザ更新のモデル
 type ActionUpdateInput struct {
-	ID         uint64 `xorm:"pk autoincr index(pk)" json:"id"`
-	IsFinished *bool  `json:"isFinished"`
-	Content    string `json:"content"`
+	ID         uint64  `xorm:"pk autoincr index(pk)" json:"id"`
+	IsFinished *bool   `json:"isFinished"`
+	Content    *string `json:"content"`
 }
 
 // TableName represents db table name

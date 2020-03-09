@@ -39,7 +39,7 @@ func (a *Actions) Create(ubrID uint64, content string) (*model.Action, error) {
 	action.Common.UnsetDefaltCols()
 	action.IsFinished = ptr.False()
 	action.UserBookRegistrationID = ubrID
-	action.Content = content
+	action.Content = ptr.String(content)
 	session := a.engine.NewSession()
 	defer session.Close()
 	err := session.Begin()
