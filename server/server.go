@@ -111,7 +111,7 @@ func Start() error {
 
 	port := os.Getenv(portEnv)
 	if port == "" {
-		port = "8080"
+		port = "443"
 	}
 
 	srv := &http.Server{
